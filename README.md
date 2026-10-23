@@ -2,7 +2,7 @@
 
 [![.NET CI](https://github.com/StangaNet/StangaNetLib.Notifications/actions/workflows/main.yml/badge.svg)](https://github.com/StangaNet/StangaNetLib.Notifications/actions/workflows/main.yml)
 ![NuGet](https://img.shields.io/badge/nuget-1.0.0-blue)
-![.NET](https://img.shields.io/badge/.NET-8.0%20%7C%209.0-512BD4)
+![.NET](https://img.shields.io/badge/.NET-8.0%20%7C%209.0%20%7C%2010.0-512BD4)
 
 Multi-channel notification dispatch (email, in-app, push) with template rendering, retry, and delivery tracking. Uses `Result` / `Guard` from [`StangaNetLib.Core`](https://github.com/StangaNet/StangaNetLib.Core); optional send resilience via [`StangaNetLib.Resilience`](https://github.com/StangaNet/StangaNetLib.Resilience).
 
