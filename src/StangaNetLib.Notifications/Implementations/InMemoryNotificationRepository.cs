@@ -52,4 +52,51 @@ internal sealed class InMemoryNotificationRepository : INotificationRepository
             .AsReadOnly();
         return Task.FromResult(Result<IReadOnlyList<NotificationRecord>>.Success(records));
     }
+
+    public Task<Result<IReadOnlyList<NotificationRecord>>> GetInboxAsync(
+        string recipientId,
+        int skip = 0,
+        int take = 50,
+        bool unreadOnly = false,
+        CancellationToken cancellationToken = default)
+    {
+        Guard.Against.NullOrWhiteSpace(recipientId, nameof(recipientId));
+        IEnumerable<NotificationRecord> query = _store.Values
+            .Where(r => r.RecipientId == recipientId && r.Channel == NotificationChannel.InApp);
+        if (unreadOnly)
+            query = query.Where(r => !r.IsRead);
+
+        IReadOnlyList<NotificationRecord> records = query
+            .OrderByDescending(r => r.CreatedAt)
+            .Skip(skip)
+            .Take(take)
+            .ToList()
+            .AsReadOnly();
+        return Task.FromResult(Result<IReadOnlyList<NotificationRecord>>.Success(records));
+    }
+
+    public Task<Result<int>> GetUnreadCountAsync(string recipientId, CancellationToken cancellationToken = default)
+    {
+        Guard.Against.NullOrWhiteSpace(recipientId, nameof(recipientId));
+        var count = _store.Values.Count(r =>
+            r.RecipientId == recipientId
+            && r.Channel == NotificationChannel.InApp
+            && !r.IsRead);
+        return Task.FromResult(Result<int>.Success(count));
+    }
+
+    public Task<Result> MarkAllReadAsync(string recipientId, CancellationToken cancellationToken = default)
+    {
+        Guard.Against.NullOrWhiteSpace(recipientId, nameof(recipientId));
+        var now = DateTimeOffset.UtcNow;
+        foreach (var record in _store.Values.Where(r =>
+                     r.RecipientId == recipientId && r.Channel == NotificationChannel.InApp && !r.IsRead))
+        {
+            record.IsRead = true;
+            record.ReadAt = now;
+            record.UpdatedAt = now;
+        }
+
+        return Task.FromResult(Result.Success());
+    }
 }

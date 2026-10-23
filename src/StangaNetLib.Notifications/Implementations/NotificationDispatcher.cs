@@ -82,6 +82,12 @@ internal sealed class NotificationDispatcher : INotificationSender
         if (string.IsNullOrWhiteSpace(body))
             return Result<string>.Failure(Error.Validation("Body", "Notification body must not be empty. Provide a Body or a TemplateId."));
 
+        if (!IsChannelEnabled(request.Channel))
+        {
+            // Channel disabled via settings — skip without error (optional email/push).
+            return Result<string>.Success($"skipped:{request.Channel}");
+        }
+
         if (!_providers.TryGetValue(request.Channel, out var provider))
             return Result<string>.Failure(new Error(
                 "Notifications.NoProvider",
@@ -100,6 +106,7 @@ internal sealed class NotificationDispatcher : INotificationSender
             AttemptCount = 0,
             CreatedAt = DateTimeOffset.UtcNow,
             CorrelationId = request.CorrelationId,
+            IsRead = false,
         };
 
         var saveResult = await _repository.SaveAsync(record, cancellationToken);
@@ -201,4 +208,12 @@ internal sealed class NotificationDispatcher : INotificationSender
         var delay = TimeSpan.FromTicks(Math.Min(ticks, _settings.MaxRetryDelay.Ticks));
         return delay;
     }
+
+    private bool IsChannelEnabled(NotificationChannel channel) => channel switch
+    {
+        NotificationChannel.Email => _settings.EnableEmail,
+        NotificationChannel.InApp => _settings.EnableInApp,
+        NotificationChannel.Push => _settings.EnablePush,
+        _ => true,
+    };
 }

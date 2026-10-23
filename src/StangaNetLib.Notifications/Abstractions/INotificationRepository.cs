@@ -50,4 +50,20 @@ public interface INotificationRepository
         int skip = 0,
         int take = int.MaxValue,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns in-app inbox items for <paramref name="recipientId"/> (newest first).
+    /// </summary>
+    Task<Result<IReadOnlyList<NotificationRecord>>> GetInboxAsync(
+        string recipientId,
+        int skip = 0,
+        int take = 50,
+        bool unreadOnly = false,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>Counts unread in-app notifications for <paramref name="recipientId"/>.</summary>
+    Task<Result<int>> GetUnreadCountAsync(string recipientId, CancellationToken cancellationToken = default);
+
+    /// <summary>Marks all in-app notifications for <paramref name="recipientId"/> as read.</summary>
+    Task<Result> MarkAllReadAsync(string recipientId, CancellationToken cancellationToken = default);
 }

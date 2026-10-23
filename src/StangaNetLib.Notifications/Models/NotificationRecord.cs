@@ -44,4 +44,13 @@ public sealed class NotificationRecord
 
     /// <summary>UTC timestamp of the last status change (set when <see cref="Status"/> is updated).</summary>
     public DateTimeOffset? UpdatedAt { get; set; }
+
+    /// <summary>
+    /// Whether the recipient has marked this in-app notification as read.
+    /// Meaningful for <see cref="NotificationChannel.InApp"/>; ignored by other channels.
+    /// </summary>
+    public bool IsRead { get; set; }
+
+    /// <summary>UTC timestamp when the notification was marked read, or <c>null</c> if unread.</summary>
+    public DateTimeOffset? ReadAt { get; set; }
 }

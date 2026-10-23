@@ -32,4 +32,13 @@ public sealed class NotificationsSettings
     /// Defaults to <c>true</c>.
     /// </summary>
     public bool UseExponentialBackoff { get; set; } = true;
+
+    /// <summary>When <c>false</c>, email sends are skipped without error. Default: <c>true</c>.</summary>
+    public bool EnableEmail { get; set; } = true;
+
+    /// <summary>When <c>false</c>, in-app sends are skipped without error. Default: <c>true</c>.</summary>
+    public bool EnableInApp { get; set; } = true;
+
+    /// <summary>When <c>false</c>, push sends are skipped without error. Default: <c>false</c>.</summary>
+    public bool EnablePush { get; set; }
 }

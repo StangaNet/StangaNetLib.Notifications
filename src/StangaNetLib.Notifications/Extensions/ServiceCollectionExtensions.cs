@@ -75,6 +75,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IValidateOptions<NotificationsSettings>, NotificationsSettingsValidator>();
         services.TryAddSingleton<INotificationTemplateEngine, SimpleTemplateEngine>();
         services.TryAddSingleton<INotificationRepository, InMemoryNotificationRepository>();
+        services.TryAddSingleton<IInboxService, InboxService>();
         services.TryAddSingleton<INotificationSender>(sp => new NotificationDispatcher(
             sp.GetRequiredService<IEnumerable<INotificationChannelProvider>>(),
             sp.GetRequiredService<INotificationTemplateEngine>(),
