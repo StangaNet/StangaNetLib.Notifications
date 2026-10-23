@@ -12,7 +12,12 @@ public sealed class MultiChannelDispatchTests
 
     private NotificationDispatcher CreateSender()
     {
-        var opts = Options.Create(new NotificationsSettings { MaxRetryCount = 0, RetryDelay = TimeSpan.Zero });
+        var opts = Options.Create(new NotificationsSettings
+        {
+            MaxRetryCount = 0,
+            RetryDelay = TimeSpan.Zero,
+            EnablePush = true,
+        });
         return new NotificationDispatcher(
             [_emailProvider, _pushProvider, _inAppProvider],
             _templateEngine, _repository, opts);

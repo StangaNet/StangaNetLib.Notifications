@@ -86,7 +86,12 @@ public sealed class NotificationSenderTests
     [Fact]
     public async Task SendAsync_WithNoProvider_ReturnsNoProviderFailure()
     {
-        var opts = Options.Create(new NotificationsSettings { MaxRetryCount = 0, RetryDelay = TimeSpan.Zero });
+        var opts = Options.Create(new NotificationsSettings
+        {
+            MaxRetryCount = 0,
+            RetryDelay = TimeSpan.Zero,
+            EnablePush = true,
+        });
         var sender = new NotificationDispatcher([], _templateEngine, _repository, opts);
         var request = new NotificationRequest
         {
